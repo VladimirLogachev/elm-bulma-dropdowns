@@ -1,11 +1,45 @@
 module Main exposing (main)
 
+import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Set exposing (Set)
 
 
-main : Html.Html msg
+main : Program () Model Msg
 main =
+    Browser.element
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = always Sub.none
+        }
+
+
+type alias Model =
+    { selectedIds : Set String }
+
+
+type alias Option =
+    { id : String, title : String }
+
+
+init : () -> ( { selectedIds : Set b }, Cmd msg )
+init _ =
+    ( { selectedIds = Set.empty }, Cmd.none )
+
+
+type Msg
+    = Msg
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    ( model, Cmd.none )
+
+
+view : Model -> Html.Html msg
+view model =
     div [ class "column" ]
         [ viewOptionSelector "selector-id-1" "Overall" dataOverall
         , viewOptionSelector "selector-id-2" "Category 1" dataCategory1
@@ -26,10 +60,6 @@ viewOptionSelector selectorId selectorTitle options =
         , span [ id selectorId ] [ text "Compare" ]
         , selectedOptions
         ]
-
-
-type alias Option =
-    { id : String, title : String }
 
 
 dataOverall : List Option
