@@ -117,8 +117,8 @@ emptyHtml =
     text ""
 
 
-view : Model -> Html Msg
-view { domElementId, selectorTitle, selectedIds, options, isOpen } =
+view : String -> Model -> Html Msg
+view extraClasses { domElementId, selectorTitle, selectedIds, options, isOpen } =
     let
         selectedOptions : Html msg
         selectedOptions =
@@ -150,7 +150,7 @@ view { domElementId, selectorTitle, selectedIds, options, isOpen } =
             else
                 emptyHtml
     in
-    section [ class "section box" ]
+    section [ class ("box section " ++ extraClasses) ]
         [ h3 [ class "is-size-5 is-uppercase has-text-weight-semibold" ] [ text selectorTitle ]
         , selectedOptions
         , btn
