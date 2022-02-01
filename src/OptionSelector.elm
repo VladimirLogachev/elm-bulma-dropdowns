@@ -1,4 +1,4 @@
-module OptionSelector exposing (Model, Msg, init, update, view)
+module OptionSelector exposing (Model, Msg, Option, init, update, view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -19,6 +19,7 @@ type alias Model =
     , selectorTitle : String
     , selectedIds : Set String
     , options : List Option
+    , isOpen : Bool
     }
 
 
@@ -32,6 +33,7 @@ init { selectorId, selectorTitle, selectedIds, options } =
       , selectorTitle = selectorTitle
       , selectedIds = selectedIds
       , options = options
+      , isOpen = False
       }
     , Cmd.none
     )
@@ -39,7 +41,8 @@ init { selectorId, selectorTitle, selectedIds, options } =
 
 type Msg
     = ToggleOption Option
-    | Other
+    | OpenDropdown
+    | CloseDropdown
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -57,12 +60,20 @@ update msg model =
             in
             ( { model | selectedIds = selectedIds }, Cmd.none )
 
-        Other ->
-            ( model, Cmd.none )
+        OpenDropdown ->
+            ( { model | isOpen = True }, Cmd.none )
+
+        CloseDropdown ->
+            ( { model | isOpen = False }, Cmd.none )
+
+
+emptyHtml : Html msg
+emptyHtml =
+    text ""
 
 
 view : Model -> Html Msg
-view { selectorId, selectorTitle, selectedIds, options } =
+view { selectorId, selectorTitle, selectedIds, options, isOpen } =
     let
         selectedOptions : Html msg
         selectedOptions =
@@ -74,12 +85,28 @@ view { selectorId, selectorTitle, selectedIds, options } =
                     |> String.join ", "
                     |> text
                 ]
+
+        btn : Html Msg
+        btn =
+            if isOpen then
+                span [ onClick CloseDropdown ] [ text "Compare" ]
+
+            else
+                span [ onClick OpenDropdown ] [ text "Compare" ]
+
+        dropdown : Html Msg
+        dropdown =
+            if isOpen then
+                div [ id selectorId ] <| List.map (\x -> viewOption (Set.member x.id selectedIds) x) options
+
+            else
+                emptyHtml
     in
     section [ class "section" ]
         [ h2 [ class "subtitle" ] [ text selectorTitle ]
         , selectedOptions
-        , span [ id selectorId ] [ text "Compare" ]
-        , div [] <| List.map (\x -> viewOption (Set.member x.id selectedIds) x) options
+        , btn
+        , dropdown
         ]
 
 

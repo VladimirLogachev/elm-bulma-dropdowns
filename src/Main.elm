@@ -3,7 +3,7 @@ module Main exposing (main)
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import OptionSelector
+import OptionSelector exposing (Option)
 import Set
 
 
@@ -23,10 +23,6 @@ type alias Model =
     , selectorCategory2 : OptionSelector.Model
     , selectorCategory3 : OptionSelector.Model
     }
-
-
-type alias Option =
-    { id : String, title : String }
 
 
 init : () -> ( Model, Cmd msg )
