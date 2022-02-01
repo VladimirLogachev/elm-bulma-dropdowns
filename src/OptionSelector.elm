@@ -88,11 +88,21 @@ view { selectorId, selectorTitle, selectedIds, options, isOpen } =
 
         btn : Html Msg
         btn =
-            if isOpen then
-                span [ onClick CloseDropdown ] [ text "Compare" ]
+            button
+                [ classList
+                    [ ( "button", True )
+                    , ( "is-rounded", True )
+                    , ( "is-info", isOpen )
+                    ]
+                , onClick
+                    (if isOpen then
+                        CloseDropdown
 
-            else
-                span [ onClick OpenDropdown ] [ text "Compare" ]
+                     else
+                        OpenDropdown
+                    )
+                ]
+                [ text "Compare" ]
 
         dropdown : Html Msg
         dropdown =
