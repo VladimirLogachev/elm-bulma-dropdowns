@@ -2,6 +2,7 @@ module OptionSelector exposing (Model, Msg, init, update, view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 import Set exposing (Set)
 
 
@@ -37,12 +38,27 @@ init { selectorId, selectorTitle, selectedIds, options } =
 
 
 type Msg
-    = Msg
+    = ToggleOption Option
+    | Other
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        ToggleOption option ->
+            let
+                selectedIds : Set String
+                selectedIds =
+                    if Set.member option.id model.selectedIds then
+                        Set.remove option.id model.selectedIds
+
+                    else
+                        Set.insert option.id model.selectedIds
+            in
+            ( { model | selectedIds = selectedIds }, Cmd.none )
+
+        Other ->
+            ( model, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -69,4 +85,4 @@ view { selectorId, selectorTitle, selectedIds, options } =
 
 viewOption : Bool -> Option -> Html Msg
 viewOption isSelected option =
-    div [] [ label [] [ input [ type_ "checkbox", checked isSelected ] [], text option.title ] ]
+    div [] [ label [] [ input [ type_ "checkbox", checked isSelected, onClick (ToggleOption option) ] [], text option.title ] ]
