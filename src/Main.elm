@@ -7,15 +7,15 @@ import Html.Attributes exposing (..)
 main : Html.Html msg
 main =
     div [ class "column" ]
-        [ viewOptionSelector "Overall" dataOverall
-        , viewOptionSelector "Category 1" dataCategory1
-        , viewOptionSelector "Category 2" dataCategory2
-        , viewOptionSelector "Category 3" dataCategory3
+        [ viewOptionSelector "selector-id-1" "Overall" dataOverall
+        , viewOptionSelector "selector-id-2" "Category 1" dataCategory1
+        , viewOptionSelector "selector-id-3" "Category 2" dataCategory2
+        , viewOptionSelector "selector-id-4" "Category 3" dataCategory3
         ]
 
 
-viewOptionSelector : String -> List Option -> Html msg
-viewOptionSelector selectorTitle options =
+viewOptionSelector : String -> String -> List Option -> Html msg
+viewOptionSelector selectorId selectorTitle options =
     let
         selectedOptions : Html msg
         selectedOptions =
@@ -23,7 +23,7 @@ viewOptionSelector selectorTitle options =
     in
     section [ class "section" ]
         [ h2 [ class "subtitle" ] [ text selectorTitle ]
-        , span [] [ text "Compare" ]
+        , span [ id selectorId ] [ text "Compare" ]
         , selectedOptions
         ]
 
