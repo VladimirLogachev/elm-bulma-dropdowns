@@ -1,8 +1,9 @@
 module Main exposing (..)
 
-import Html exposing (text)
+import Html exposing (..)
+import Html.Attributes exposing (..)
 
 
 main : Html.Html msg
 main =
-    text "dropdowns"
+    h1 [ class "title" ] [ text "dropdowns" ]

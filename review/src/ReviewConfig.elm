@@ -53,7 +53,7 @@ config =
     , NoUnused.Parameters.rule
     , NoUnused.Patterns.rule
     , NoUnused.Variables.rule
-    , NoImportingEverything.rule [ "Html" ]
+    , NoImportingEverything.rule [ "Html" , "Html.Attributes"]
     , NoMissingTypeAnnotation.rule
     , NoMissingTypeAnnotationInLetIn.rule
     , NoPrematureLetComputation.rule
