@@ -1,9 +1,14 @@
-module OptionSelector exposing (Model, Msg, Option, init, update, view)
+module OptionSelector exposing (Model, Msg, Option, init, subscriptions, update, view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Set exposing (Set)
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none
 
 
 type alias Config =

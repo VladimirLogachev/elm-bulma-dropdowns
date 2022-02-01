@@ -7,13 +7,23 @@ import OptionSelector exposing (Option)
 import Set
 
 
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.batch
+        [ Sub.map SelectorOverallMsg (OptionSelector.subscriptions model.selectorOverall)
+        , Sub.map SelectorCategory1Msg (OptionSelector.subscriptions model.selectorCategory1)
+        , Sub.map SelectorCategory2Msg (OptionSelector.subscriptions model.selectorCategory2)
+        , Sub.map SelectorCategory3Msg (OptionSelector.subscriptions model.selectorCategory3)
+        ]
+
+
 main : Program () Model Msg
 main =
     Browser.element
         { init = init
         , view = view
         , update = update
-        , subscriptions = always Sub.none
+        , subscriptions = subscriptions
         }
 
 
