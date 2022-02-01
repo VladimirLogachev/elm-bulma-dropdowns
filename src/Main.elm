@@ -24,9 +24,9 @@ type alias Option =
     { id : String, title : String }
 
 
-init : () -> ( { selectedIds : Set b }, Cmd msg )
+init : () -> ( Model, Cmd msg )
 init _ =
-    ( { selectedIds = Set.empty }, Cmd.none )
+    ( { selectedIds = Set.singleton "2" }, Cmd.none )
 
 
 type Msg
@@ -41,19 +41,26 @@ update msg model =
 view : Model -> Html.Html msg
 view model =
     div [ class "column" ]
-        [ viewOptionSelector "selector-id-1" "Overall" dataOverall
-        , viewOptionSelector "selector-id-2" "Category 1" dataCategory1
-        , viewOptionSelector "selector-id-3" "Category 2" dataCategory2
-        , viewOptionSelector "selector-id-4" "Category 3" dataCategory3
+        [ viewOptionSelector "selector-id-1" "Overall" model.selectedIds dataOverall
+        , viewOptionSelector "selector-id-2" "Category 1" model.selectedIds dataCategory1
+        , viewOptionSelector "selector-id-3" "Category 2" model.selectedIds dataCategory2
+        , viewOptionSelector "selector-id-4" "Category 3" model.selectedIds dataCategory3
         ]
 
 
-viewOptionSelector : String -> String -> List Option -> Html msg
-viewOptionSelector selectorId selectorTitle options =
+viewOptionSelector : String -> String -> Set String -> List Option -> Html msg
+viewOptionSelector selectorId selectorTitle selectedIds options =
     let
         selectedOptions : Html msg
         selectedOptions =
-            p [] [ text "Selected: ", text <| String.join ", " <| List.map .title options ]
+            p []
+                [ text "Selected: "
+                , options
+                    |> List.filter (\x -> Set.member x.id selectedIds)
+                    |> List.map .title
+                    |> String.join ", "
+                    |> text
+                ]
     in
     section [ class "section" ]
         [ h2 [ class "subtitle" ] [ text selectorTitle ]
