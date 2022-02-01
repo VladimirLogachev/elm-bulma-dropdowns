@@ -3,7 +3,8 @@ module Main exposing (main)
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Set exposing (Set)
+import OptionSelector
+import Set
 
 
 main : Program () Model Msg
@@ -17,7 +18,11 @@ main =
 
 
 type alias Model =
-    { selectedIds : Set String }
+    { selectorOverall : OptionSelector.Model
+    , selectorCategory1 : OptionSelector.Model
+    , selectorCategory2 : OptionSelector.Model
+    , selectorCategory3 : OptionSelector.Model
+    }
 
 
 type alias Option =
@@ -26,81 +31,104 @@ type alias Option =
 
 init : () -> ( Model, Cmd msg )
 init _ =
-    ( { selectedIds = Set.singleton "2" }, Cmd.none )
+    let
+        ( selectorOverall, cmdOverall ) =
+            OptionSelector.init
+                { selectorId = "selector-id-0"
+                , selectorTitle = "Overall"
+                , selectedIds = Set.empty
+                , options = dataOverall
+                }
+
+        ( selectorCategory1, cmdCategory1 ) =
+            OptionSelector.init
+                { selectorId = "selector-id-1"
+                , selectorTitle = "Category 1"
+                , selectedIds = Set.empty
+                , options = dataCategory1
+                }
+
+        ( selectorCategory2, cmdCategory2 ) =
+            OptionSelector.init
+                { selectorId = "selector-id-2"
+                , selectorTitle = "Category 2"
+                , selectedIds = Set.empty
+                , options = dataCategory2
+                }
+
+        ( selectorCategory3, cmdCategory3 ) =
+            OptionSelector.init
+                { selectorId = "selector-id-3"
+                , selectorTitle = "Category 3"
+                , selectedIds = Set.empty
+                , options = dataCategory3
+                }
+    in
+    ( { selectorOverall = selectorOverall
+      , selectorCategory1 = selectorCategory1
+      , selectorCategory2 = selectorCategory2
+      , selectorCategory3 = selectorCategory3
+      }
+    , Cmd.batch
+        [ cmdOverall
+        , cmdCategory1
+        , cmdCategory2
+        , cmdCategory3
+        ]
+    )
 
 
 type Msg
-    = Msg
+    = SelectorOverallMsg OptionSelector.Msg
+    | SelectorCategory1Msg OptionSelector.Msg
+    | SelectorCategory2Msg OptionSelector.Msg
+    | SelectorCategory3Msg OptionSelector.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        SelectorOverallMsg subMsg ->
+            let
+                ( subModel, subCmd ) =
+                    OptionSelector.update subMsg model.selectorOverall
+            in
+            ( { model | selectorOverall = subModel }, Cmd.map SelectorOverallMsg subCmd )
+
+        SelectorCategory1Msg subMsg ->
+            let
+                ( subModel, subCmd ) =
+                    OptionSelector.update subMsg model.selectorCategory1
+            in
+            ( { model | selectorCategory1 = subModel }, Cmd.map SelectorCategory1Msg subCmd )
+
+        SelectorCategory2Msg subMsg ->
+            let
+                ( subModel, subCmd ) =
+                    OptionSelector.update subMsg model.selectorCategory2
+            in
+            ( { model | selectorCategory2 = subModel }, Cmd.map SelectorCategory2Msg subCmd )
+
+        SelectorCategory3Msg subMsg ->
+            let
+                ( subModel, subCmd ) =
+                    OptionSelector.update subMsg model.selectorCategory3
+            in
+            ( { model | selectorCategory3 = subModel }, Cmd.map SelectorCategory3Msg subCmd )
 
 
-view : Model -> Html.Html msg
+view : Model -> Html.Html Msg
 view model =
     div [ class "container" ]
-        [ viewOptionSelector
-            { selectorId = "selector-id-0"
-            , selectorTitle = "Overall"
-            , selectedIds = model.selectedIds
-            , options = dataOverall
-            }
-        , viewOptionSelector
-            { selectorId = "selector-id-1"
-            , selectorTitle = "Category 1"
-            , selectedIds = model.selectedIds
-            , options = dataCategory1
-            }
-        , viewOptionSelector
-            { selectorId = "selector-id-2"
-            , selectorTitle = "Category 2"
-            , selectedIds = model.selectedIds
-            , options = dataCategory2
-            }
-        , viewOptionSelector
-            { selectorId = "selector-id-3"
-            , selectorTitle = "Category 3"
-            , selectedIds = model.selectedIds
-            , options = dataCategory3
-            }
+        [ Html.map SelectorOverallMsg <| OptionSelector.view model.selectorOverall
+        , Html.map SelectorCategory1Msg <| OptionSelector.view model.selectorCategory1
+        , Html.map SelectorCategory2Msg <| OptionSelector.view model.selectorCategory2
+        , Html.map SelectorCategory3Msg <| OptionSelector.view model.selectorCategory3
         ]
 
 
-type alias OptionSelectorConfig =
-    { selectorId : String
-    , selectorTitle : String
-    , selectedIds : Set String
-    , options : List Option
-    }
 
-
-viewOptionSelector : OptionSelectorConfig -> Html msg
-viewOptionSelector { selectorId, selectorTitle, selectedIds, options } =
-    let
-        selectedOptions : Html msg
-        selectedOptions =
-            p []
-                [ text "Selected: "
-                , options
-                    |> List.filter (\x -> Set.member x.id selectedIds)
-                    |> List.map .title
-                    |> String.join ", "
-                    |> text
-                ]
-    in
-    section [ class "section" ]
-        [ h2 [ class "subtitle" ] [ text selectorTitle ]
-        , selectedOptions
-        , span [ id selectorId ] [ text "Compare" ]
-        , div [] <| List.map (\x -> viewOption (Set.member x.id selectedIds) x) options
-        ]
-
-
-viewOption : Bool -> Option -> Html msg
-viewOption isSelected option =
-    div [] [ label [] [ input [ type_ "checkbox", checked isSelected ] [], text option.title ] ]
+-- DATA
 
 
 dataOverall : List Option
