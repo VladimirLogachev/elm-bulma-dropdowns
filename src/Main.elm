@@ -7,19 +7,24 @@ import Html.Attributes exposing (..)
 main : Html.Html msg
 main =
     div [ class "column" ]
-        [ viewOptions dataOverall
-        , viewOptions dataCategory1
-        , viewOptions dataCategory2
-        , viewOptions dataCategory3
+        [ viewOptionSelector "Overall" dataOverall
+        , viewOptionSelector "Category 1" dataCategory1
+        , viewOptionSelector "Category 2" dataCategory2
+        , viewOptionSelector "Category 3" dataCategory3
         ]
 
 
-viewOptions : List Option -> Html msg
-viewOptions options =
+viewOptionSelector : String -> List Option -> Html msg
+viewOptionSelector selectorTitle options =
+    let
+        selectedOptions : Html msg
+        selectedOptions =
+            p [] [ text "Selected: ", text <| String.join ", " <| List.map .title options ]
+    in
     section [ class "section" ]
-        [ h2 [ class "subtitle" ] [ text "Overall" ]
+        [ h2 [ class "subtitle" ] [ text selectorTitle ]
         , span [] [ text "Compare" ]
-        , p [] [ text "Selected: ", text <| String.join ", " <| List.map .title options ]
+        , selectedOptions
         ]
 
 
