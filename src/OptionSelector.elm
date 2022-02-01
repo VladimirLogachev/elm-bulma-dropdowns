@@ -97,12 +97,15 @@ view { selectorId, selectorTitle, selectedIds, options, isOpen } =
         dropdown : Html Msg
         dropdown =
             if isOpen then
-                div [ id selectorId ] <| List.map (\x -> viewOption (Set.member x.id selectedIds) x) options
+                div [ class "dropdown-container" ]
+                    [ div [ id selectorId, class "option-list box" ] <|
+                        List.map (\x -> viewOption (Set.member x.id selectedIds) x) options
+                    ]
 
             else
                 emptyHtml
     in
-    section [ class "section" ]
+    section [ class "section box" ]
         [ h2 [ class "subtitle" ] [ text selectorTitle ]
         , selectedOptions
         , btn

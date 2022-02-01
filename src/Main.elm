@@ -115,11 +115,13 @@ update msg model =
 
 view : Model -> Html.Html Msg
 view model =
-    div [ class "container" ]
-        [ Html.map SelectorOverallMsg <| OptionSelector.view model.selectorOverall
-        , Html.map SelectorCategory1Msg <| OptionSelector.view model.selectorCategory1
-        , Html.map SelectorCategory2Msg <| OptionSelector.view model.selectorCategory2
-        , Html.map SelectorCategory3Msg <| OptionSelector.view model.selectorCategory3
+    div [ class "has-background-grey-lighter" ]
+        [ div [ class "container" ]
+            [ Html.map SelectorOverallMsg <| OptionSelector.view model.selectorOverall
+            , Html.map SelectorCategory1Msg <| OptionSelector.view model.selectorCategory1
+            , Html.map SelectorCategory2Msg <| OptionSelector.view model.selectorCategory2
+            , Html.map SelectorCategory3Msg <| OptionSelector.view model.selectorCategory3
+            ]
         ]
 
 
