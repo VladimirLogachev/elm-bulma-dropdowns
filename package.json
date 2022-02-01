@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "parcel index.html",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "format-fix-all": "elm-format --yes .",
+    "format-validate": "elm-format --validate .",
+    "review": "elm-review",
+    "review-fix-interactive": "elm-review --fix",
+    "review-fix-all": "yes | elm-review --fix-all"
   },
   "repository": {
     "type": "git",
