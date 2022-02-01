@@ -41,15 +41,43 @@ update msg model =
 view : Model -> Html.Html msg
 view model =
     div [ class "column" ]
-        [ viewOptionSelector "selector-id-1" "Overall" model.selectedIds dataOverall
-        , viewOptionSelector "selector-id-2" "Category 1" model.selectedIds dataCategory1
-        , viewOptionSelector "selector-id-3" "Category 2" model.selectedIds dataCategory2
-        , viewOptionSelector "selector-id-4" "Category 3" model.selectedIds dataCategory3
+        [ viewOptionSelector
+            { selectorId = "selector-id-0"
+            , selectorTitle = "Overall"
+            , selectedIds = model.selectedIds
+            , options = dataOverall
+            }
+        , viewOptionSelector
+            { selectorId = "selector-id-1"
+            , selectorTitle = "Category 1"
+            , selectedIds = model.selectedIds
+            , options = dataCategory1
+            }
+        , viewOptionSelector
+            { selectorId = "selector-id-2"
+            , selectorTitle = "Category 2"
+            , selectedIds = model.selectedIds
+            , options = dataCategory2
+            }
+        , viewOptionSelector
+            { selectorId = "selector-id-3"
+            , selectorTitle = "Category 3"
+            , selectedIds = model.selectedIds
+            , options = dataCategory3
+            }
         ]
 
 
-viewOptionSelector : String -> String -> Set String -> List Option -> Html msg
-viewOptionSelector selectorId selectorTitle selectedIds options =
+type alias OptionSelectorConfig =
+    { selectorId : String
+    , selectorTitle : String
+    , selectedIds : Set String
+    , options : List Option
+    }
+
+
+viewOptionSelector : OptionSelectorConfig -> Html msg
+viewOptionSelector { selectorId, selectorTitle, selectedIds, options } =
     let
         selectedOptions : Html msg
         selectedOptions =
