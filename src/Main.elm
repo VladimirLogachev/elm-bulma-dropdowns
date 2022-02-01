@@ -40,7 +40,7 @@ update msg model =
 
 view : Model -> Html.Html msg
 view model =
-    div [ class "column" ]
+    div [ class "container" ]
         [ viewOptionSelector
             { selectorId = "selector-id-0"
             , selectorTitle = "Overall"
@@ -92,9 +92,15 @@ viewOptionSelector { selectorId, selectorTitle, selectedIds, options } =
     in
     section [ class "section" ]
         [ h2 [ class "subtitle" ] [ text selectorTitle ]
-        , span [ id selectorId ] [ text "Compare" ]
         , selectedOptions
+        , span [ id selectorId ] [ text "Compare" ]
+        , div [] <| List.map (\x -> viewOption (Set.member x.id selectedIds) x) options
         ]
+
+
+viewOption : Bool -> Option -> Html msg
+viewOption isSelected option =
+    div [] [ label [] [ input [ type_ "checkbox", checked isSelected ] [], text option.title ] ]
 
 
 dataOverall : List Option
