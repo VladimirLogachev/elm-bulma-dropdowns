@@ -1,0 +1,6 @@
+node_modules/
+elm-stuff/
+
+# Parcel related files
+dist/
+.cache/
