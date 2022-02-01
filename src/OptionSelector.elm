@@ -151,7 +151,7 @@ view { domElementId, selectorTitle, selectedIds, options, isOpen } =
                 emptyHtml
     in
     section [ class "section box" ]
-        [ h2 [ class "subtitle" ] [ text selectorTitle ]
+        [ h3 [ class "is-size-5 is-uppercase has-text-weight-semibold" ] [ text selectorTitle ]
         , selectedOptions
         , btn
         , dropdown
