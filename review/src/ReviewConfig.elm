@@ -20,7 +20,6 @@ import NoMissingTypeAnnotationInLetIn
 import NoPrematureLetComputation
 import NoRecursiveUpdate
 import NoSimpleLetBody
-import NoUnoptimizedRecursion
 import NoUnsafeDivision
 import NoUnused.CustomTypeConstructorArgs
 import NoUnused.CustomTypeConstructors
@@ -39,7 +38,6 @@ config : List Rule
 config =
     [ NoDebug.Log.rule
     , NoDebug.TodoOrToString.rule
-    , NoUnoptimizedRecursion.rule (NoUnoptimizedRecursion.optOutWithComment "IGNORE TCO")
     , Simplify.rule Simplify.defaults
     , NoMissingSubscriptionsCall.rule
     , NoRecursiveUpdate.rule

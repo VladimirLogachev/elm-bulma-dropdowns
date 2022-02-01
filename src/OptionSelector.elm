@@ -1,18 +1,58 @@
 module OptionSelector exposing (Model, Msg, Option, init, subscriptions, update, view)
 
+import Browser.Events
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
+import Json.Decode as Decode
 import Set exposing (Set)
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    if model.isOpen then
+        isOutsideElement model.domElementId
+            |> Decode.andThen (\() -> Decode.succeed CloseDropdown)
+            |> Browser.Events.onMouseUp
+
+    else
+        Sub.none
+
+
+isOutsideElement : String -> Decode.Decoder ()
+isOutsideElement domElementId =
+    let
+        isOutsideElementAndParentNodes : String -> Decode.Decoder Bool
+        isOutsideElementAndParentNodes checkDomElementId =
+            Decode.oneOf
+                [ Decode.field "id" Decode.string
+                    |> Decode.andThen
+                        (\id ->
+                            if checkDomElementId == id then
+                                -- Quickly "succeed" decoding with failing result
+                                -- to avoid extra (unnecessary) decoding attempts with parent nodes
+                                Decode.succeed False
+
+                            else
+                                Decode.fail "check parent node"
+                        )
+                , Decode.lazy (\_ -> isOutsideElementAndParentNodes checkDomElementId |> Decode.field "parentNode")
+                , Decode.succeed True
+                ]
+    in
+    Decode.field "target" (isOutsideElementAndParentNodes domElementId)
+        |> Decode.andThen
+            (\isOutside ->
+                if isOutside then
+                    Decode.succeed ()
+
+                else
+                    Decode.fail "inside"
+            )
 
 
 type alias Config =
-    { selectorId : String
+    { domElementId : String
     , selectorTitle : String
     , selectedIds : Set String
     , options : List Option
@@ -20,7 +60,7 @@ type alias Config =
 
 
 type alias Model =
-    { selectorId : String
+    { domElementId : String
     , selectorTitle : String
     , selectedIds : Set String
     , options : List Option
@@ -33,8 +73,8 @@ type alias Option =
 
 
 init : Config -> ( Model, Cmd msg )
-init { selectorId, selectorTitle, selectedIds, options } =
-    ( { selectorId = selectorId
+init { domElementId, selectorTitle, selectedIds, options } =
+    ( { domElementId = domElementId
       , selectorTitle = selectorTitle
       , selectedIds = selectedIds
       , options = options
@@ -78,7 +118,7 @@ emptyHtml =
 
 
 view : Model -> Html Msg
-view { selectorId, selectorTitle, selectedIds, options, isOpen } =
+view { domElementId, selectorTitle, selectedIds, options, isOpen } =
     let
         selectedOptions : Html msg
         selectedOptions =
@@ -93,27 +133,17 @@ view { selectorId, selectorTitle, selectedIds, options, isOpen } =
 
         btn : Html Msg
         btn =
-            button
-                [ classList
-                    [ ( "button", True )
-                    , ( "is-rounded", True )
-                    , ( "is-info", isOpen )
-                    ]
-                , onClick
-                    (if isOpen then
-                        CloseDropdown
+            if isOpen then
+                button [ class "button is-rounded is-info", onClick CloseDropdown ] [ text "Compare" ]
 
-                     else
-                        OpenDropdown
-                    )
-                ]
-                [ text "Compare" ]
+            else
+                button [ class "button is-rounded", onClick OpenDropdown ] [ text "Compare" ]
 
         dropdown : Html Msg
         dropdown =
             if isOpen then
                 div [ class "dropdown-container" ]
-                    [ div [ id selectorId, class "option-list box" ] <|
+                    [ div [ id domElementId, class "option-list box" ] <|
                         List.map (\x -> viewOption (Set.member x.id selectedIds) x) options
                     ]
 

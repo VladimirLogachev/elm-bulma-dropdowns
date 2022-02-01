@@ -40,7 +40,7 @@ init _ =
     let
         ( selectorOverall, cmdOverall ) =
             OptionSelector.init
-                { selectorId = "selector-id-0"
+                { domElementId = "selector-id-0"
                 , selectorTitle = "Overall"
                 , selectedIds = Set.empty
                 , options = dataOverall
@@ -48,7 +48,7 @@ init _ =
 
         ( selectorCategory1, cmdCategory1 ) =
             OptionSelector.init
-                { selectorId = "selector-id-1"
+                { domElementId = "selector-id-1"
                 , selectorTitle = "Category 1"
                 , selectedIds = Set.empty
                 , options = dataCategory1
@@ -56,7 +56,7 @@ init _ =
 
         ( selectorCategory2, cmdCategory2 ) =
             OptionSelector.init
-                { selectorId = "selector-id-2"
+                { domElementId = "selector-id-2"
                 , selectorTitle = "Category 2"
                 , selectedIds = Set.empty
                 , options = dataCategory2
@@ -64,7 +64,7 @@ init _ =
 
         ( selectorCategory3, cmdCategory3 ) =
             OptionSelector.init
-                { selectorId = "selector-id-3"
+                { domElementId = "selector-id-3"
                 , selectorTitle = "Category 3"
                 , selectedIds = Set.empty
                 , options = dataCategory3
